@@ -5126,6 +5126,7 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => n0.ExpBehavior("淡");
 		},
+		() => "背音",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
@@ -5141,14 +5142,15 @@ self.C3_ExpressionFuncs = [
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const f1 = p._GetNode(1).GetBoundMethod();
 			const v2 = p._GetNode(2).GetVar();
-			return () => f0(f1(10, v2.GetValue()));
+			return () => (f0(f1(10, v2.GetValue())) - 1);
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const f1 = p._GetNode(1).GetBoundMethod();
 			const v2 = p._GetNode(2).GetVar();
-			return () => (f0(f1(10, v2.GetValue())) + 1);
+			return () => f0(f1(10, v2.GetValue()));
 		},
+		() => -100,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const f1 = p._GetNode(1).GetBoundMethod();
@@ -5166,7 +5168,6 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "載入",
 		() => "https://docs.google.com/spreadsheets/d/e/2PACX-1vQpVr4UgUpZNZ2PP05Autc1tlSr5zxCQAQmzgxuuASyrsPksJJSJ02m-mXQrDTuGc9hC0JJknIy_IyB/pub?output=csv",
-		() => 6,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => (f0(1) * 0.5);
