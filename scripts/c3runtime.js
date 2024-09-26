@@ -836,10 +836,11 @@ context,this._rasterSurfaceWidth,this._rasterSurfaceHeight,width,height);if(!thi
 {
 'use strict';const C3=self.C3;C3.UTF8_BOM="\ufeff";const NUMERIC_CHARS=new Set("0123456789");C3.IsNumericChar=function IsNumericChar(c){return NUMERIC_CHARS.has(c)};const WHITESPACE_CHARS=new Set(" \t\n\r\u00a0\u0085\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u202f\u205f\u3000");C3.IsWhitespaceChar=function IsWhitespaceChar(c){return WHITESPACE_CHARS.has(c)};C3.FilterWhitespace=function FilterWhitespace(str){return[...str].filter(ch=>!C3.IsWhitespaceChar(ch)).join("")};
 C3.IsStringAllWhitespace=function IsStringAllWhitespace(str){for(const ch of str)if(!C3.IsWhitespaceChar(ch))return false;return true};C3.IsCharArrayAllWhitespace=function IsStringAllWhitespace(chArr){for(const ch of chArr)if(!C3.IsWhitespaceChar(ch))return false;return true};C3.IsUnprintableChar=function IsUnprintableChar(c){return c.length===1&&c.charCodeAt(0)<32};C3.FilterUnprintableChars=function FilterUnprintableChars(str){return[...str].filter(ch=>!C3.IsUnprintableChar(ch)).join("")};
-const CJK_PUNCTUATION_REGEX=/\p{P}(?<=[\u3000-\u303F\uFF00-\uFFEF])/u;C3.IsCJKPunctuationChar=function IsCJKPunctuationChar(ch){return!C3.IsWhitespaceChar(ch)&&CJK_PUNCTUATION_REGEX.test(ch)};const NUMERIC_STRING_CHARS=new Set("0123456789.+-e");C3.IsStringNumber=function IsStringNumber(str){str=str.trim();if(!str.length)return false;let firstChar=str.charAt(0);if(firstChar!=="-"&&!NUMERIC_CHARS.has(firstChar))return false;for(let ch of str)if(!NUMERIC_STRING_CHARS.has(ch))return false;return true};
-C3.RemoveTrailingDigits=function RemoveTrailingDigits(str){let i=str.length;while(i>0){let prev_ch=str.charAt(i-1);if(!C3.IsNumericChar(prev_ch))break;--i}return str.substr(0,i)};C3.IncrementNumberAtEndOf=function IncrementNumberAtEndOf(str){let baseStr=C3.RemoveTrailingDigits(str);let numberStr=str.substr(baseStr.length);if(numberStr)numberStr=(parseInt(numberStr,10)+1).toString();else numberStr="2";return baseStr+numberStr};
-const HTML_ENTITY_MAP=new Map([["&","&amp;"],["<","&lt;"],[">","&gt;"],['"',"&quot;"],["'","&#39;"]]);function lookupHtmlEntity(s){return HTML_ENTITY_MAP.get(s)}const HTML_ENTITY_REGEX=/[&<>"']/g;C3.EscapeHTML=function EscapeHTML(str){return str.replace(HTML_ENTITY_REGEX,lookupHtmlEntity)};C3.EscapeJS=function EscapeJS(str){let ret=C3.ReplaceAll(str,"\\","\\\\");ret=C3.ReplaceAll(ret,'"','\\"');ret=C3.ReplaceAll(ret,"\t","\\t");ret=C3.ReplaceAll(ret,"\r","");return C3.ReplaceAll(ret,"\n","\\n")};
-C3.EscapeXML=function EscapeXML(str){let ret=C3.ReplaceAll(str,"&","&amp;");ret=C3.ReplaceAll(ret,"<","&lt;");ret=C3.ReplaceAll(ret,">","&gt;");return C3.ReplaceAll(ret,'"',"&quot;")};const ESCAPE_REGEX=/[-[\]{}()*+?.,\\^$|#\s]/g;C3.EscapeRegex=function EscapeRegex(str){return str.replace(ESCAPE_REGEX,"\\$&")};C3.CountCharsInString=function CountCharsInString(str,ch){let count=0;for(const c of str)if(c===ch)++count;return count};
+let cjkPunctuationRegex=null;try{cjkPunctuationRegex=new RegExp("\\p{P}(?<=[\\u3000-\\u303F\\uFF00-\\uFFEF])","u")}catch(err){console.warn("Unable to detect CJK punctuation: ",err)}C3.IsCJKPunctuationChar=function IsCJKPunctuationChar(ch){return!C3.IsWhitespaceChar(ch)&&cjkPunctuationRegex&&cjkPunctuationRegex.test(ch)};const NUMERIC_STRING_CHARS=new Set("0123456789.+-e");
+C3.IsStringNumber=function IsStringNumber(str){str=str.trim();if(!str.length)return false;let firstChar=str.charAt(0);if(firstChar!=="-"&&!NUMERIC_CHARS.has(firstChar))return false;for(let ch of str)if(!NUMERIC_STRING_CHARS.has(ch))return false;return true};C3.RemoveTrailingDigits=function RemoveTrailingDigits(str){let i=str.length;while(i>0){let prev_ch=str.charAt(i-1);if(!C3.IsNumericChar(prev_ch))break;--i}return str.substr(0,i)};
+C3.IncrementNumberAtEndOf=function IncrementNumberAtEndOf(str){let baseStr=C3.RemoveTrailingDigits(str);let numberStr=str.substr(baseStr.length);if(numberStr)numberStr=(parseInt(numberStr,10)+1).toString();else numberStr="2";return baseStr+numberStr};const HTML_ENTITY_MAP=new Map([["&","&amp;"],["<","&lt;"],[">","&gt;"],['"',"&quot;"],["'","&#39;"]]);function lookupHtmlEntity(s){return HTML_ENTITY_MAP.get(s)}const HTML_ENTITY_REGEX=/[&<>"']/g;
+C3.EscapeHTML=function EscapeHTML(str){return str.replace(HTML_ENTITY_REGEX,lookupHtmlEntity)};C3.EscapeJS=function EscapeJS(str){let ret=C3.ReplaceAll(str,"\\","\\\\");ret=C3.ReplaceAll(ret,'"','\\"');ret=C3.ReplaceAll(ret,"\t","\\t");ret=C3.ReplaceAll(ret,"\r","");return C3.ReplaceAll(ret,"\n","\\n")};C3.EscapeXML=function EscapeXML(str){let ret=C3.ReplaceAll(str,"&","&amp;");ret=C3.ReplaceAll(ret,"<","&lt;");ret=C3.ReplaceAll(ret,">","&gt;");return C3.ReplaceAll(ret,'"',"&quot;")};
+const ESCAPE_REGEX=/[-[\]{}()*+?.,\\^$|#\s]/g;C3.EscapeRegex=function EscapeRegex(str){return str.replace(ESCAPE_REGEX,"\\$&")};C3.CountCharsInString=function CountCharsInString(str,ch){let count=0;for(const c of str)if(c===ch)++count;return count};
 C3.FindAll=function FindAll(str,find,matchCase=false){if(!find)return[];if(!matchCase){str=str.toLowerCase();find=find.toLowerCase()}const findLen=find.length;let startIndex=0;let index=0;let ret=[];while((index=str.indexOf(find,startIndex))>-1){ret.push(index);startIndex=index+findLen}return ret};C3.ReplaceAll=function ReplaceAll(str,find,replace){return str.replaceAll(find,()=>replace)};
 C3.ReplaceAllCaseInsensitive=function ReplaceAll(str,find,replace){return str.replace(new RegExp(C3.EscapeRegex(find),"gi"),()=>replace)};C3.SetElementContent=function SetElementContent(elem,stringlike){if(typeof stringlike==="string")elem.textContent=stringlike;else if(stringlike.isPlainText())elem.textContent=stringlike.toString();else{elem.innerHTML=stringlike.toHTML();if(stringlike instanceof C3.BBString)stringlike.attachLinkHandlers(elem)}};
 C3.StringLikeEquals=function StringLikeEquals(a,b){if(a instanceof C3.HtmlString||a instanceof C3.BBString)return a.equals(b);else if(b instanceof C3.HtmlString||b instanceof C3.BBString)return b.equals(a);else return a===b};C3.StringSubstitute=function StringSubstitute(str,...arr){let ret=str;for(let i=0,len=arr.length;i<len;++i){const sub=`{${i}}`;if(!str.includes(sub))throw new Error(`missing placeholder '${sub}' in string substitution`);ret=ret.replace(sub,arr[i].toString())}return ret};
@@ -1727,8 +1728,8 @@ callback)}_postToDOM(messageId,data){C3X.RequireString(messageId);if(!this._p_do
 data)}_postToDOMMaybeSync(handler,data){const runtime=map.get(this).GetRuntime();if(runtime.IsInWorker())this._postToDOM(handler,data);else return window["c3_runtimeInterface"]["_OnMessageFromRuntime"]({"type":"event","component":this._p_domComponentId,"handler":handler,"data":data,"responseId":null})}_setTicking(isTicking){isTicking=!!isTicking;if(this._p_isTicking===isTicking)return;this._p_isTicking=isTicking;const runtime=map.get(this).GetRuntime();if(isTicking){if(!this._p_tickFunc)this._p_tickFunc=
 ()=>this._tick();runtime.Dispatcher().addEventListener("tick",this._p_tickFunc)}else runtime.Dispatcher().removeEventListener("tick",this._p_tickFunc)}_isTicking(){return this._p_isTicking}_tick(){}_setTicking2(isTicking){isTicking=!!isTicking;if(this._p_isTicking2===isTicking)return;this._p_isTicking2=isTicking;const runtime=map.get(this).GetRuntime();if(isTicking){if(!this._p_tickFunc2)this._p_tickFunc2=()=>this._tick2();runtime.Dispatcher().addEventListener("tick2",this._p_tickFunc2)}else runtime.Dispatcher().removeEventListener("tick2",
 this._p_tickFunc2)}_isTicking2(){return this._p_isTicking2}_tick2(){}_getDebuggerProperties(){return[]}_saveToJson(){return null}_loadFromJson(o){}_isWrapperExtensionAvailable(){if(!this._p_wrapperComponentId)throw new Error(`no wrapper component id set`);const runtime=map.get(this).GetRuntime();return runtime.HasWrapperComponentId(this._p_wrapperComponentId)}_addWrapperExtensionMessageHandler(messageId,callback){C3X.RequireString(messageId);C3X.RequireFunction(callback);if(!this._p_wrapperComponentId)throw new Error(`no wrapper component id set`);
-const runtime=map.get(this).GetRuntime();runtime.AddWrapperExtensionMessageHandler(this._p_wrapperComponentId,messageId,callback)}_addWrapperMessageHandlers(arr){C3X.RequireArray(arr);for(const [messageId,callback]of arr)this._addWrapperExtensionMessageHandler(messageId,callback)}_sendWrapperExtensionMessage(messageId,params){if(!this._p_wrapperComponentId)throw new Error(`no wrapper component id set`);this.runtime.sendWrapperExtensionMessage(this._p_wrapperComponentId,messageId,params)}_sendWrapperExtensionMessageAsync(messageId,
-params){if(!this._p_wrapperComponentId)throw new Error(`no wrapper component id set`);return this.runtime.sendWrapperExtensionMessageAsync(this._p_wrapperComponentId,messageId,params)}};
+const runtime=map.get(this).GetRuntime();runtime.AddWrapperExtensionMessageHandler(this._p_wrapperComponentId,messageId,callback)}_addWrapperMessageHandlers(arr){C3X.RequireArray(arr);for(const [messageId,callback]of arr)this._addWrapperExtensionMessageHandler(messageId,callback)}_sendWrapperExtensionMessage(messageId,params){if(!this._p_wrapperComponentId)throw new Error(`no wrapper component id set`);this.runtime.sdk.sendWrapperExtensionMessage(this._p_wrapperComponentId,messageId,params)}_sendWrapperExtensionMessageAsync(messageId,
+params){if(!this._p_wrapperComponentId)throw new Error(`no wrapper component id set`);return this.runtime.sdk.sendWrapperExtensionMessageAsync(this._p_wrapperComponentId,messageId,params)}};
 
 }
 
@@ -3192,7 +3193,7 @@ VariadicParameter,StringExpressionParameter,TimelineParameter,BooleanParameter,F
 class ExpressionParameter extends C3.Parameter{constructor(owner,type,index,data){super(owner,type,index);this._solIndex=0;const expData=data[1];this._expressionNumber=expData[0];this._numberedNodes=[];this._expressionFunc=null;for(let i=1,len=expData.length;i<len;++i)this._numberedNodes.push(C3.ExpNode.CreateNode(this,expData[i]));if(this._numberedNodes.length)this.Get=this.GetExpression;else{this.Get=GetExpressionFunc(this._expressionNumber);this._isConstant=true}}_GetNode(i){if(i<0||i>=this._numberedNodes.length)throw new RangeError("invalid numbered node");
 return this._numberedNodes[i]}_PostInit(){for(const node of this._numberedNodes)node._PostInit();const func=GetExpressionFunc(this._expressionNumber);if(this._numberedNodes.length)this._expressionFunc=func(this);else this._expressionFunc=func}GetSolIndex(){return this._solIndex}GetExpression(solIndex){this._solIndex=solIndex;return this._expressionFunc()}}
 class StringExpressionParameter extends ExpressionParameter{constructor(owner,type,index,data){super(owner,type,index,data);this.Get=this.GetStringExpression;if(type===14){this.GetEventBlock().SetAllSolModifiers();if(this._owner instanceof C3.Action)this.GetEventBlock().SetSolWriterAfterCnds()}}GetStringExpression(solIndex){this._solIndex=solIndex;const ret=this._expressionFunc();if(typeof ret==="string")return ret;else return""}_GetFastTriggerValue(){return GetExpressionFunc(this._expressionNumber)()}}
-class LayerExpressionParameter extends ExpressionParameter{constructor(owner,type,index,data){super(owner,type,index,data);if(owner.GetImplementationSdkVersion()>=2)this.Get=this.GetILayer;else this.Get=this.GetLayer;this._isConstant=false}GetLayer(solIndex){this._solIndex=solIndex;const ret=this._expressionFunc();const layout=this.GetRuntime().GetCurrentLayout();return layout.GetLayer(ret)}GetILayer(solIndex){const layer=this.GetLayer();return layer?layer.GetILayer():null}}
+class LayerExpressionParameter extends ExpressionParameter{constructor(owner,type,index,data){super(owner,type,index,data);if(owner.GetImplementationSdkVersion()>=2)this.Get=this.GetILayer;else this.Get=this.GetLayer;this._isConstant=false}GetLayer(solIndex){this._solIndex=solIndex;const ret=this._expressionFunc();const layout=this.GetRuntime().GetCurrentLayout();return layout.GetLayer(ret)}GetILayer(solIndex){const layer=this.GetLayer(solIndex);return layer?layer.GetILayer():null}}
 class ComboParameter extends C3.Parameter{constructor(owner,type,index,data){super(owner,type,index);this._combo=data[1];this.Get=this.GetCombo;this._isConstant=true}GetCombo(){return this._combo}}class BooleanParameter extends C3.Parameter{constructor(owner,type,index,data){super(owner,type,index);this._bool=data[1];this.Get=this.GetBoolean;this._isConstant=true}GetBoolean(){return this._bool}}
 class ObjectParameter extends C3.Parameter{constructor(owner,type,index,data){super(owner,type,index);this._objectClass=this.GetRuntime().GetObjectClassByIndex(data[1]);if(owner.GetImplementationSdkVersion()>=2)this.Get=this.GetIObjectClass;else this.Get=this.GetObjectClass;const eventBlock=this.GetEventBlock();eventBlock._AddSolModifier(this._objectClass);if(this._owner instanceof C3.Action)eventBlock.SetSolWriterAfterCnds();else if(eventBlock.GetParent())eventBlock.GetParent().SetSolWriterAfterCnds();
 this._isConstant=true}GetObjectClass(){return this._objectClass}GetIObjectClass(){return this._objectClass?this._objectClass.GetIObjectClass():null}}
@@ -4843,6 +4844,36 @@ index);return ret?ret.x:0},TagY(tag,index){const ret=this._GetTagPosition(tag,in
 
 }
 
+// scripts/plugins/Arr/c3runtime/runtime.js
+{
+'use strict';{const C3=self.C3;C3.Plugins.Arr=class ArrayPlugin extends C3.SDKPluginBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Plugins.Arr.Type=class ArrayType extends C3.SDKTypeBase{constructor(objectClass){super(objectClass)}Release(){super.Release()}OnCreate(){}}}
+{const C3=self.C3;const C3X=self.C3X;const IInstance=self.IInstance;function ResizeArray(arr,len,data){if(len<arr.length)C3.truncateArray(arr,len);else if(len>arr.length)if(typeof data==="function")for(let i=arr.length;i<len;++i)arr.push(data());else for(let i=arr.length;i<len;++i)arr.push(data)}C3.Plugins.Arr.Instance=class ArrayInstance extends C3.SDKInstanceBase{constructor(inst,properties){super(inst);this._cx=10;this._cy=1;this._cz=1;this._arr=null;this._forX=[];this._forY=[];this._forZ=[];this._forDepth=
+-1;if(properties){this._cx=properties[0];this._cy=properties[1];this._cz=properties[2]}this._arr=C3.MakeFilledArray(this._cx,()=>C3.MakeFilledArray(this._cy,()=>C3.MakeFilledArray(this._cz,0)))}Release(){this._arr=null;super.Release()}At(x,y,z){x=Math.floor(x);y=Math.floor(y);z=Math.floor(z);if(x>=0&&x<this._cx&&y>=0&&y<this._cy&&z>=0&&z<this._cz)return this._arr[x][y][z];else return 0}Set(x,y,z,val){x=Math.floor(x);y=Math.floor(y);z=Math.floor(z);if(x>=0&&x<this._cx&&y>=0&&y<this._cy&&z>=0&&z<this._cz)this._arr[x][y][z]=
+val}SetSize(w,h,d){w=Math.floor(w);h=Math.floor(h);d=Math.floor(d);if(w<0)w=0;if(h<0)h=0;if(d<0)d=0;if(this._cx===w&&this._cy===h&&this._cz===d)return;this._cx=w;this._cy=h;this._cz=d;const arr=this._arr;ResizeArray(arr,w,()=>C3.MakeFilledArray(h,()=>C3.MakeFilledArray(d,0)));for(let x=0;x<w;++x){ResizeArray(arr[x],h,()=>C3.MakeFilledArray(d,0));for(let y=0;y<h;++y)ResizeArray(arr[x][y],d,0)}}GetWidth(){return this._cx}GetHeight(){return this._cy}GetDepth(){return this._cz}_ShuffleHelper(axis,len,
+x,y,z){while(len>0){const i=Math.floor(this._runtime.Random()*len);--len;if(axis===0){const v1=this.At(len,y,z);const v2=this.At(i,y,z);this.Set(len,y,z,v2);this.Set(i,y,z,v1)}else if(axis===1){const v1=this.At(x,len,z);const v2=this.At(x,i,z);this.Set(x,len,z,v2);this.Set(x,i,z,v1)}else if(axis===2){const v1=this.At(x,y,len);const v2=this.At(x,y,i);this.Set(x,y,len,v2);this.Set(x,y,i,v1)}}}GetDebuggerProperties(){const prefix="plugins.arr.debugger";const propsPrefix="plugins.arr.properties";const ret=
+[{title:prefix+".array-properties.title",properties:[{name:propsPrefix+".width.name",value:this._cx,onedit:v=>this.SetSize(v,this._cy,this._cz)},{name:propsPrefix+".height.name",value:this._cy,onedit:v=>this.SetSize(this._cx,v,this._cz)},{name:propsPrefix+".depth.name",value:this._cz,onedit:v=>this.SetSize(this._cx,this._cy,v)},{name:propsPrefix+".elements.name",value:this._cx*this._cy*this._cz}]}];const dataProps=[];if(this._cy===1&&this._cz===1)for(let x=0;x<this._cx;++x)dataProps.push({name:"$"+
+x,value:this._arr[x][0][0],onedit:v=>this._arr[x][0][0]=v});else for(let x=0;x<this._cx;++x)dataProps.push({name:"$"+x,value:this._arr[x].toString()});if(dataProps.length)ret.push({title:prefix+".array-data.title",properties:dataProps});return ret}GetAsJsonString(){return JSON.stringify({"c2array":true,"size":[this._cx,this._cy,this._cz],"data":this._arr})}SaveToJson(){return{"size":[this._cx,this._cy,this._cz],"data":this._arr}}LoadFromJson(o){const sz=o["size"];this._cx=sz[0];this._cy=sz[1];this._cz=
+sz[2];this._arr=o["data"]}_GetForX(){if(this._forDepth>=0&&this._forDepth<this._forX.length)return this._forX[this._forDepth];else return 0}_GetForY(){if(this._forDepth>=0&&this._forDepth<this._forY.length)return this._forY[this._forDepth];else return 0}_GetForZ(){if(this._forDepth>=0&&this._forDepth<this._forZ.length)return this._forZ[this._forDepth];else return 0}GetScriptInterfaceClass(){return self.IArrayInstance}};const map=new WeakMap;self.IArrayInstance=class IArrayInstance extends IInstance{constructor(){super();
+map.set(this,IInstance._GetInitInst().GetSdkInstance())}get width(){return map.get(this).GetWidth()}get height(){return map.get(this).GetHeight()}get depth(){return map.get(this).GetDepth()}setSize(w,h=1,d=1){C3X.RequireFiniteNumber(w);C3X.RequireFiniteNumber(h);C3X.RequireFiniteNumber(d);map.get(this).SetSize(w,h,d)}getAt(x,y=0,z=0){C3X.RequireFiniteNumber(x);C3X.RequireFiniteNumber(y);C3X.RequireFiniteNumber(z);return map.get(this).At(x,y,z)}setAt(val,x,y=0,z=0){C3X.RequireFiniteNumber(x);C3X.RequireFiniteNumber(y);
+C3X.RequireFiniteNumber(z);if(typeof val!=="number"&&typeof val!=="string")throw new TypeError("invalid type");map.get(this).Set(x,y,z,val)}}}
+{const C3=self.C3;function DoForEachTrigger(eventSheetManager,currentEvent,solModifiers,oldFrame,newFrame,sdkInst){eventSheetManager.PushCopySol(solModifiers);const sol=sdkInst.GetObjectClass().GetCurrentSol();sol.PickOne(sdkInst.GetInstance());currentEvent.Retrigger(oldFrame,newFrame);eventSheetManager.PopSol(solModifiers)}C3.Plugins.Arr.Cnds={CompareX(x,cmp,val){return C3.compare(this.At(x,0,0),cmp,val)},CompareXY(x,y,cmp,val){return C3.compare(this.At(x,y,0),cmp,val)},CompareXYZ(x,y,z,cmp,val){return C3.compare(this.At(x,
+y,z),cmp,val)},ArrForEach(dims){const runtime=this._runtime;const eventSheetManager=runtime.GetEventSheetManager();const currentEvent=runtime.GetCurrentEvent();const solModifiers=currentEvent.GetSolModifiers();const eventStack=runtime.GetEventStack();const oldFrame=eventStack.GetCurrentStackFrame();const newFrame=eventStack.Push(currentEvent);const forDepth=++this._forDepth;const forX=this._forX;const forY=this._forY;const forZ=this._forZ;const cx=this._cx;const cy=this._cy;const cz=this._cz;if(forDepth===
+this._forX.length){forX.push(0);forY.push(0);forZ.push(0)}else{forX[forDepth]=0;forY[forDepth]=0;forZ[forDepth]=0}runtime.SetDebuggingEnabled(false);if(dims===0)for(let x=0;x<cx;++x)for(let y=0;y<cy;++y)for(let z=0;z<cz;++z){forX[forDepth]=x;forY[forDepth]=y;forZ[forDepth]=z;DoForEachTrigger(eventSheetManager,currentEvent,solModifiers,oldFrame,newFrame,this)}else if(dims===1)for(let x=0;x<cx;++x)for(let y=0;y<cy;++y){forX[forDepth]=x;forY[forDepth]=y;DoForEachTrigger(eventSheetManager,currentEvent,
+solModifiers,oldFrame,newFrame,this)}else for(let x=0;x<cx;++x){forX[forDepth]=x;DoForEachTrigger(eventSheetManager,currentEvent,solModifiers,oldFrame,newFrame,this)}runtime.SetDebuggingEnabled(true);this._forDepth--;eventStack.Pop();return false},CompareCurrent(cmp,val){return C3.compare(this.At(this._GetForX(),this._GetForY(),this._GetForZ()),cmp,val)},Contains(val){const cx=this._cx;const cy=this._cy;const cz=this._cz;const arr=this._arr;for(let x=0;x<cx;++x)for(let y=0;y<cy;++y)for(let z=0;z<
+cz;++z)if(arr[x][y][z]===val)return true;return false},IsEmpty(){return this._cx===0||this._cy===0||this._cz===0},CompareSize(axis,cmp,val){let s=0;switch(axis){case 0:s=this._cx;break;case 1:s=this._cy;break;case 2:s=this._cz;break}return C3.compare(s,cmp,val)}}}
+{const C3=self.C3;function CompareValues(va,vb){if(typeof va==="number"&&typeof vb==="number")return va-vb;else{const sa=va.toString();const sb=vb.toString();if(sa<sb)return-1;else if(sa>sb)return 1;else return 0}}C3.Plugins.Arr.Acts={Clear(v){const cx=this._cx;const cy=this._cy;const cz=this._cz;const arr=this._arr;for(let x=0;x<cx;++x)for(let y=0;y<cy;++y)for(let z=0;z<cz;++z)arr[x][y][z]=v},SetSize(w,h,d){this.SetSize(w,h,d)},SetX(x,val){this.Set(x,0,0,val)},SetXY(x,y,val){this.Set(x,y,0,val)},
+SetXYZ(x,y,z,val){this.Set(x,y,z,val)},Push(where,value,axis){const cx=this._cx;const cy=this._cy;const cz=this._cz;const arr=this._arr;if(axis===0){const add=C3.MakeFilledArray(cy,()=>C3.MakeFilledArray(cz,value));if(where===0)arr.push(add);else arr.unshift(add);this._cx++}else if(axis===1){for(let x=0;x<cx;++x){const add=C3.MakeFilledArray(cz,value);if(where===0)arr[x].push(add);else arr[x].unshift(add)}this._cy++}else{for(let x=0;x<cx;++x)for(let y=0;y<cy;++y)if(where===0)arr[x][y].push(value);
+else arr[x][y].unshift(value);this._cz++}},Pop(where,axis){const cx=this._cx;const cy=this._cy;const cz=this._cz;const arr=this._arr;if(axis===0){if(cx===0)return;if(where===0)arr.pop();else arr.shift();this._cx--}else if(axis===1){if(cy===0)return;for(let x=0;x<cx;++x)if(where===0)arr[x].pop();else arr[x].shift();this._cy--}else{if(cz===0)return;for(let x=0;x<cx;++x)for(let y=0;y<cy;++y)if(where===0)arr[x][y].pop();else arr[x][y].shift();this._cz--}},Reverse(axis){const cx=this._cx;const cy=this._cy;
+const cz=this._cz;const arr=this._arr;if(cx===0||cy===0||cz===0)return;if(axis===0)arr.reverse();else if(axis===1)for(let x=0;x<cx;++x)arr[x].reverse();else for(let x=0;x<cx;++x)for(let y=0;y<cy;++y)arr[x][y].reverse()},Sort(axis){const cx=this._cx;const cy=this._cy;const cz=this._cz;const arr=this._arr;if(cx===0||cy===0||cz===0)return;if(axis===0)arr.sort((a,b)=>CompareValues(a[0][0],b[0][0]));else if(axis===1)for(let x=0;x<cx;++x)arr[x].sort((a,b)=>CompareValues(a[0],b[0]));else for(let x=0;x<cx;++x)for(let y=
+0;y<cy;++y)arr[x][y].sort(CompareValues)},Shuffle(axis){const cx=this._cx;const cy=this._cy;const cz=this._cz;if(cx===0||cy===0||cz===0)return;if(axis===0)for(let y=0;y<cy;++y)for(let z=0;z<cz;++z)this._ShuffleHelper(axis,cx,0,y,z);else if(axis===1)for(let x=0;x<cx;++x)for(let z=0;z<cz;++z)this._ShuffleHelper(axis,cy,x,0,z);else for(let x=0;x<cx;++x)for(let y=0;y<cy;++y)this._ShuffleHelper(axis,cz,x,y,0)},Delete(index,axis){index=Math.floor(index);if(index<0)return;const cx=this._cx;const cy=this._cy;
+const cz=this._cz;const arr=this._arr;if(axis===0){if(index>=cx)return;arr.splice(index,1);this._cx--}else if(axis===1){if(index>=cy)return;for(let x=0;x<cx;++x)arr[x].splice(index,1);this._cy--}else{if(index>=cz)return;for(let x=0;x<cx;++x)for(let y=0;y<cy;++y)arr[x][y].splice(index,1);this._cz--}},Insert(value,index,axis){index=Math.floor(index);if(index<0)return;const cx=this._cx;const cy=this._cy;const cz=this._cz;const arr=this._arr;if(axis===0){if(index>cx)return;arr.splice(index,0,C3.MakeFilledArray(cy,
+()=>C3.MakeFilledArray(cz,value)));this._cx++}else if(axis===1){if(index>cy)return;for(let x=0;x<cx;++x)arr[x].splice(index,0,C3.MakeFilledArray(cz,value));this._cy++}else{if(index>cz)return;for(let x=0;x<cx;++x)for(let y=0;y<cy;++y)arr[x][y].splice(index,0,value);this._cz++}},SplitString(str,sep,type){const parts=str.split(sep);this.SetSize(parts.length,1,1);for(let i=0,len=parts.length;i<len;++i){let v=parts[i];if(type===0){if(String(Number(v))===v)v=Number(v)}else if(type===2)v=Number(v);this.Set(i,
+0,0,v)}},JSONLoad(json){let o=null;try{o=JSON.parse(json)}catch(err){console.error("[Construct] Failed to parse JSON: ",err);return}if(!o["c2array"])return;const sz=o["size"];this._cx=sz[0];this._cy=sz[1];this._cz=sz[2];this._arr=o["data"]},JSONDownload(filename){const url=URL.createObjectURL(new Blob([this.GetAsJsonString()],{type:"application/json"}));this._runtime.InvokeDownload(url,filename)}}}
+{const C3=self.C3;C3.Plugins.Arr.Exps={At(x,y,z){return this.At(x,y||0,z||0)},Width(){return this._cx},Height(){return this._cy},Depth(){return this._cz},CurX(){return this._GetForX()},CurY(){return this._GetForY()},CurZ(){return this._GetForZ()},CurValue(){return this.At(this._GetForX(),this._GetForY(),this._GetForZ())},Front(){return this.At(0,0,0)},Back(){return this.At(this._cx-1,0,0)},IndexOf(v){const arr=this._arr;for(let x=0,len=this._cx;x<len;++x)if(arr[x][0][0]===v)return x;return-1},LastIndexOf(v){const arr=
+this._arr;for(let x=this._cx-1;x>=0;--x)if(arr[x][0][0]===v)return x;return-1},JoinString(sep){let arr=[];for(let x=0;x<this._cx;++x)arr.push(this.At(x,0,0));return arr.join(sep)},AsJSON(){return this.GetAsJsonString()}}};
+
+}
+
 // scripts/behaviors/Sin/c3runtime/runtime.js
 {
 'use strict';{const C3=self.C3;C3.Behaviors.Sin=class SinBehavior extends C3.SDKBehaviorBase{constructor(opts){super(opts)}Release(){super.Release()}}}{const C3=self.C3;C3.Behaviors.Sin.Type=class SinType extends C3.SDKBehaviorTypeBase{constructor(behaviorType){super(behaviorType)}Release(){super.Release()}OnCreate(){}}}
@@ -5135,6 +5166,12 @@ self.C3_ExpressionFuncs = [
 		},
 		() => 3,
 		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			const v2 = p._GetNode(2).GetVar();
+			return () => f0(v1.GetValue(), (v2.GetValue() + 15));
+		},
+		p => {
 			const v0 = p._GetNode(0).GetVar();
 			return () => v0.GetValue();
 		},
@@ -5168,22 +5205,41 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "載入",
 		() => "https://docs.google.com/spreadsheets/d/e/2PACX-1vQpVr4UgUpZNZ2PP05Autc1tlSr5zxCQAQmzgxuuASyrsPksJJSJ02m-mXQrDTuGc9hC0JJknIy_IyB/pub?output=csv",
+		() => "次",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => (f0(1) * 0.5);
+			return () => f0("次");
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => (f0(0) * 0.5);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			return () => f0(f1("次"));
 		},
 		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => (f0(2) * 0.5);
+			const n0 = p._GetNode(0);
+			return () => multiply(n0.ExpObject(0, 1), 0.5);
 		},
 		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => (f0(3) * 0.5);
+			const n0 = p._GetNode(0);
+			return () => multiply(n0.ExpObject(1, 1), 0.5);
 		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => multiply(n0.ExpObject(2, 1), 0.5);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => multiply(n0.ExpObject(3, 1), 0.5);
+		},
+		() => 1.5,
+		() => "12432",
+		() => "12412",
+		() => "41231",
+		() => "41431",
+		() => "12421",
+		() => "12431",
+		() => "24142",
+		() => "23142",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
@@ -5211,23 +5267,18 @@ self.C3_ExpressionFuncs = [
 			return () => f0(v1.GetValue(), 4, 1);
 		},
 		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0(0);
+			const n0 = p._GetNode(0);
+			return () => add(n0.ExpObject(0, 0), 1);
 		},
-		() => "12432",
-		() => "12412",
-		() => "41321",
-		() => "42321",
-		() => "31312",
-		() => "31342",
-		() => "21341",
-		() => "21321",
-		() => "23214",
-		() => "24214",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
 			return () => f0(v1.GetValue(), 11);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), 26);
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -5237,12 +5288,27 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), 27);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
 			return () => f0(v1.GetValue(), 13);
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), 28);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
 			return () => f0(v1.GetValue(), 14);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), 29);
 		}
 ];
 
