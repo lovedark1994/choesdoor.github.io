@@ -16,6 +16,11 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Shape3D,
 		C3.Plugins.Text,
 		C3.Plugins.Arr,
+		C3.Behaviors.Rotate,
+		C3.Behaviors.Bullet,
+		C3.Plugins.Keyboard.Cnds.OnKey,
+		C3.Plugins.System.Acts.SetVar,
+		C3.Plugins.System.Acts.GoToLayout,
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.Camera3D.Acts.LookParallelToLayout,
 		C3.Plugins.Sprite.Exps.X,
@@ -26,8 +31,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Sprite.Acts.SetVisible,
 		C3.Plugins.System.Cnds.CompareVar,
 		C3.Plugins.Audio.Acts.Play,
-		C3.Plugins.Keyboard.Cnds.OnKey,
-		C3.Plugins.System.Acts.SetVar,
 		C3.Plugins.System.Acts.Wait,
 		C3.Behaviors.Tween.Acts.TweenOneProperty,
 		C3.Plugins.AdvancedRandom.Acts.CreatePermutationTable,
@@ -38,7 +41,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Camera3D.Acts.SetPosition,
 		C3.Plugins.System.Cnds.TriggerOnce,
 		C3.Plugins.Timeline.Acts.PlayTimeline,
-		C3.Plugins.System.Acts.GoToLayout,
 		C3.Plugins.System.Acts.RestartLayout,
 		C3.Plugins.System.Cnds.CompareBoolVar,
 		C3.Behaviors.Sin.Acts.SetEnabled,
@@ -72,7 +74,18 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Arr.Exps.At,
 		C3.Behaviors.Tween.Cnds.IsAnyPlaying,
 		C3.Plugins.Arr.Cnds.CompareXY,
-		C3.Plugins.System.Exps.mid
+		C3.Plugins.System.Exps.mid,
+		C3.Plugins.System.Cnds.IsGroupActive,
+		C3.Plugins.System.Cnds.ForEach,
+		C3.Plugins.Sprite.Acts.SetAnimFrame,
+		C3.Plugins.Sprite.Acts.StopAnim,
+		C3.Plugins.Sprite.Acts.SetAngle,
+		C3.Behaviors.Bullet.Acts.SetAngleOfMotion,
+		C3.Behaviors.Bullet.Acts.SetEnabled,
+		C3.Behaviors.Rotate.Acts.SetSpeed,
+		C3.Behaviors.Bullet.Acts.SetAcceleration,
+		C3.Behaviors.Bullet.Acts.SetSpeed,
+		C3.Plugins.System.Acts.SetLayerEffectParam
 	];
 };
 self.C3_JsPropNameTable = [
@@ -113,6 +126,11 @@ self.C3_JsPropNameTable = [
 	{亂數表: 0},
 	{黑房字2: 0},
 	{黑字2: 0},
+	{Sprite: 0},
+	{旋轉: 0},
+	{子彈: 0},
+	{左飛鏢: 0},
+	{右飛鏢: 0},
 	{關主: 0},
 	{房間們: 0},
 	{選擇: 0},
@@ -129,7 +147,9 @@ self.C3_JsPropNameTable = [
 	{錯誤指令: 0},
 	{正確指令: 0},
 	{等待秒數: 0},
-	{指令: 0}
+	{指令: 0},
+	{準備好: 0},
+	{按鍵: 0}
 ];
 
 self.InstanceType = {
@@ -166,6 +186,9 @@ self.InstanceType = {
 	亂數表: class extends self.IArrayInstance {},
 	黑房字2: class extends self.ITextInstance {},
 	黑字2: class extends self.ITextInstance {},
+	Sprite: class extends self.ISpriteInstance {},
+	左飛鏢: class extends self.ISpriteInstance {},
+	右飛鏢: class extends self.ISpriteInstance {},
 	關主: class extends self.ISpriteInstance {},
 	房間們: class extends self.I3DShapeInstance {}
 }
