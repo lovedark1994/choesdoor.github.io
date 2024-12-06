@@ -1738,16 +1738,16 @@ self.C3_ExpressionFuncs = [
 		() => -717750023016447,
 		() => -1023,
 		p => {
-			const n0 = p._GetNode(0);
+			const f0 = p._GetNode(0).GetBoundMethod();
 			const f1 = p._GetNode(1).GetBoundMethod();
 			const v2 = p._GetNode(2).GetVar();
-			return () => (((n0.ExpInstVar()).toString() + "號忍者說：") + f1(9, (30 + v2.GetValue())));
+			return () => f0(f1(9, (30 + v2.GetValue())));
 		},
 		p => {
-			const n0 = p._GetNode(0);
+			const f0 = p._GetNode(0).GetBoundMethod();
 			const f1 = p._GetNode(1).GetBoundMethod();
 			const v2 = p._GetNode(2).GetVar();
-			return () => (((n0.ExpInstVar()).toString() + "號忍者說：") + f1(10, (30 + v2.GetValue())));
+			return () => f0(f1(10, (30 + v2.GetValue())));
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
