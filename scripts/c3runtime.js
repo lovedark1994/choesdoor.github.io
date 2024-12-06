@@ -1731,7 +1731,38 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpBehavior("凸");
-		}
+		},
+		() => -588,
+		() => "卷軸出",
+		() => 530,
+		() => -717750023016447,
+		() => -1023,
+		p => {
+			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			const v2 = p._GetNode(2).GetVar();
+			return () => (((n0.ExpInstVar()).toString() + "號忍者說：") + f1(9, (30 + v2.GetValue())));
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			const v2 = p._GetNode(2).GetVar();
+			return () => (((n0.ExpInstVar()).toString() + "號忍者說：") + f1(10, (30 + v2.GetValue())));
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const n1 = p._GetNode(1);
+			const v2 = p._GetNode(2).GetVar();
+			return () => f0(n1.ExpInstVar(), (30 + v2.GetValue()));
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const f1 = p._GetNode(1).GetBoundMethod();
+			const n2 = p._GetNode(2);
+			const v3 = p._GetNode(3).GetVar();
+			return () => (((n0.ExpInstVar()).toString() + "號忍者說：") + f1((n2.ExpInstVar() + 4), (30 + v3.GetValue())));
+		},
+		() => -633318697599999
 ];
 
 

@@ -85,7 +85,11 @@ self.C3_GetObjectRefTable = function () {
 		C3.Behaviors.Rotate.Acts.SetSpeed,
 		C3.Behaviors.Bullet.Acts.SetAcceleration,
 		C3.Behaviors.Bullet.Acts.SetSpeed,
-		C3.Plugins.System.Acts.SetLayerEffectParam
+		C3.Plugins.System.Acts.SetLayerEffectParam,
+		C3.Plugins.Sprite.Acts.SetX,
+		C3.Plugins.Text.Acts.SetFontColor,
+		C3.Plugins.Text.Acts.SetVisible,
+		C3.Plugins.Text.Cnds.CompareInstanceVar
 	];
 };
 self.C3_JsPropNameTable = [
@@ -131,6 +135,12 @@ self.C3_JsPropNameTable = [
 	{子彈: 0},
 	{左飛鏢: 0},
 	{右飛鏢: 0},
+	{卷軸底: 0},
+	{Sprite3: 0},
+	{Sprite4: 0},
+	{門牌: 0},
+	{門牌2: 0},
+	{Sprite6: 0},
 	{關主: 0},
 	{房間們: 0},
 	{選擇: 0},
@@ -149,7 +159,9 @@ self.C3_JsPropNameTable = [
 	{等待秒數: 0},
 	{指令: 0},
 	{準備好: 0},
-	{按鍵: 0}
+	{按鍵: 0},
+	{共同看到: 0},
+	{忍者答案: 0}
 ];
 
 self.InstanceType = {
@@ -189,6 +201,12 @@ self.InstanceType = {
 	Sprite: class extends self.ISpriteInstance {},
 	左飛鏢: class extends self.ISpriteInstance {},
 	右飛鏢: class extends self.ISpriteInstance {},
+	卷軸底: class extends self.ISpriteInstance {},
+	Sprite3: class extends self.ISpriteInstance {},
+	Sprite4: class extends self.ISpriteInstance {},
+	門牌: class extends self.ITextInstance {},
+	門牌2: class extends self.ITextInstance {},
+	Sprite6: class extends self.ISpriteInstance {},
 	關主: class extends self.ISpriteInstance {},
 	房間們: class extends self.I3DShapeInstance {}
 }
