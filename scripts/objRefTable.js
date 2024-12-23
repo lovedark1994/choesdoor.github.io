@@ -62,7 +62,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Browser.Exps.QueryParam,
 		C3.Plugins.AJAX.Acts.Request,
 		C3.Plugins.AJAX.Cnds.OnComplete,
-		C3.Plugins.Browser.Acts.RequestFullScreen,
 		C3.Plugins.System.Cnds.For,
 		C3.Plugins.Arr.Acts.SetXY,
 		C3.Plugins.System.Exps.loopindex,
@@ -87,7 +86,8 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Audio.Acts.PlayByName,
 		C3.Plugins.Sprite.Cnds.CompareFrame,
 		C3.Plugins.Sprite.Acts.StartAnim,
-		C3.Plugins.Audio.Cnds.OnEnded
+		C3.Plugins.Audio.Cnds.OnEnded,
+		C3.Plugins.Text.Acts.SetText
 	];
 };
 self.C3_JsPropNameTable = [
@@ -133,7 +133,6 @@ self.C3_JsPropNameTable = [
 	{子彈: 0},
 	{左飛鏢: 0},
 	{右飛鏢: 0},
-	{卷軸底: 0},
 	{Sprite3: 0},
 	{Sprite2: 0},
 	{Sprite12: 0},
@@ -143,6 +142,7 @@ self.C3_JsPropNameTable = [
 	{Sprite4: 0},
 	{Sprite6: 0},
 	{顯示題目: 0},
+	{抽字: 0},
 	{關主: 0},
 	{房間們: 0},
 	{選擇: 0},
@@ -208,7 +208,6 @@ self.InstanceType = {
 	Sprite: class extends self.ISpriteInstance {},
 	左飛鏢: class extends self.ISpriteInstance {},
 	右飛鏢: class extends self.ISpriteInstance {},
-	卷軸底: class extends self.ISpriteInstance {},
 	Sprite3: class extends self.ISpriteInstance {},
 	Sprite2: class extends self.ISpriteInstance {},
 	Sprite12: class extends self.ISpriteInstance {},
@@ -218,6 +217,7 @@ self.InstanceType = {
 	Sprite4: class extends self.ISpriteInstance {},
 	Sprite6: class extends self.ISpriteInstance {},
 	顯示題目: class extends self.ISpriteInstance {},
+	抽字: class extends self.ITextInstance {},
 	關主: class extends self.ISpriteInstance {},
 	房間們: class extends self.I3DShapeInstance {}
 }

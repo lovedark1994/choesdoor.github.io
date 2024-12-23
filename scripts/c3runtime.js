@@ -1555,10 +1555,7 @@ self.C3_ExpressionFuncs = [
 		() => "人物",
 		() => "背音",
 		() => "淡",
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0(1, 1);
-		},
+		() => "準備好你的喵幣\n每包忍術卡卡包售價為8枚喵幣\n請派一位代表到後方鬼面具忍者購買卡包",
 		() => 3,
 		p => {
 			const n0 = p._GetNode(0);
@@ -1697,6 +1694,21 @@ self.C3_ExpressionFuncs = [
 			const v1 = p._GetNode(1).GetVar();
 			return () => f0(v1.GetValue(), 29);
 		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), 17);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), 18);
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), 19);
+		},
 		() => 300,
 		p => {
 			const v0 = p._GetNode(0).GetVar();
@@ -1730,6 +1742,11 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const n0 = p._GetNode(0);
 			return () => (n0.ExpInstVar()).toString();
+		},
+		() => "抽",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => (and("請第", f0(0)) + "組決定路線");
 		}
 ];
 
