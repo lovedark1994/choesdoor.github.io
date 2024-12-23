@@ -1544,43 +1544,26 @@ self.C3_ExpressionFuncs = [
 			return () => (n0.ExpObject() + 500);
 		},
 		() => 100,
+		p => {
+			const n0 = p._GetNode(0);
+			return () => n0.ExpInstVar();
+		},
+		() => 85,
+		() => 0.25,
+		() => "離開",
+		() => "重",
 		() => "人物",
+		() => "背音",
 		() => "淡",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0(1, 1);
+		},
+		() => 3,
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpBehavior("淡");
 		},
-		() => "背音",
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const v1 = p._GetNode(1).GetVar();
-			const v2 = p._GetNode(2).GetVar();
-			return () => f0(v1.GetValue(), v2.GetValue());
-		},
-		() => 3,
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const v1 = p._GetNode(1).GetVar();
-			const v2 = p._GetNode(2).GetVar();
-			return () => f0(v1.GetValue(), (v2.GetValue() + 15));
-		},
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			return () => v0.GetValue();
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const f1 = p._GetNode(1).GetBoundMethod();
-			const v2 = p._GetNode(2).GetVar();
-			return () => (f0(f1(10, v2.GetValue())) - 1);
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const f1 = p._GetNode(1).GetBoundMethod();
-			const v2 = p._GetNode(2).GetVar();
-			return () => f0(f1(10, v2.GetValue()));
-		},
-		() => -100,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const f1 = p._GetNode(1).GetBoundMethod();
@@ -1598,6 +1581,7 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "載入",
 		() => "https://docs.google.com/spreadsheets/d/e/2PACX-1vQpVr4UgUpZNZ2PP05Autc1tlSr5zxCQAQmzgxuuASyrsPksJJSJ02m-mXQrDTuGc9hC0JJknIy_IyB/pub?output=csv",
+		() => "N",
 		() => "次",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -1611,6 +1595,10 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const n0 = p._GetNode(0);
 			return () => multiply(n0.ExpObject(0, 1), 0.5);
+		},
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			return () => v0.GetValue();
 		},
 		p => {
 			const n0 = p._GetNode(0);
@@ -1638,7 +1626,6 @@ self.C3_ExpressionFuncs = [
 			const v1 = p._GetNode(1).GetVar();
 			return () => f0(v1.GetValue(), 0, 1);
 		},
-		() => 0.25,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
@@ -1663,6 +1650,11 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => add(n0.ExpObject(0, 0), 1);
 		},
+		() => "右",
+		() => "P",
+		() => "答",
+		() => "A",
+		() => "下一步",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
@@ -1673,6 +1665,8 @@ self.C3_ExpressionFuncs = [
 			const v1 = p._GetNode(1).GetVar();
 			return () => f0(v1.GetValue(), 26);
 		},
+		() => "1",
+		() => "2",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
@@ -1704,16 +1698,9 @@ self.C3_ExpressionFuncs = [
 			return () => f0(v1.GetValue(), 29);
 		},
 		() => 300,
-		() => "按鈕們",
-		() => 6,
-		() => 7,
 		p => {
 			const v0 = p._GetNode(0).GetVar();
 			return () => (v0.GetValue()).toString();
-		},
-		p => {
-			const n0 = p._GetNode(0);
-			return () => n0.ExpInstVar();
 		},
 		() => 90,
 		() => 30,
@@ -1732,37 +1719,18 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => n0.ExpBehavior("凸");
 		},
-		() => -588,
-		() => "卷軸出",
-		() => 530,
-		() => -717750023016447,
-		() => -1023,
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const f1 = p._GetNode(1).GetBoundMethod();
-			const v2 = p._GetNode(2).GetVar();
-			return () => f0(f1(9, (30 + v2.GetValue())));
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const f1 = p._GetNode(1).GetBoundMethod();
-			const v2 = p._GetNode(2).GetVar();
-			return () => f0(f1(10, (30 + v2.GetValue())));
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const n1 = p._GetNode(1);
-			const v2 = p._GetNode(2).GetVar();
-			return () => f0(n1.ExpInstVar(), (30 + v2.GetValue()));
-		},
+		() => "上一步",
+		() => -10,
+		() => "旁白",
+		() => "4",
+		() => "6",
+		() => "3",
+		() => "5",
+		() => "7",
 		p => {
 			const n0 = p._GetNode(0);
-			const f1 = p._GetNode(1).GetBoundMethod();
-			const n2 = p._GetNode(2);
-			const v3 = p._GetNode(3).GetVar();
-			return () => (((n0.ExpInstVar()).toString() + "號忍者說：") + f1((n2.ExpInstVar() + 4), (30 + v3.GetValue())));
-		},
-		() => -633318697599999
+			return () => (n0.ExpInstVar()).toString();
+		}
 ];
 
 
