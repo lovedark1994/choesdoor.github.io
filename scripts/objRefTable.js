@@ -70,7 +70,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Behaviors.Tween.Cnds.IsAnyPlaying,
 		C3.Plugins.Arr.Cnds.CompareXY,
 		C3.Plugins.System.Exps.mid,
-		C3.Plugins.System.Acts.AddVar,
 		C3.Plugins.System.Cnds.ForEach,
 		C3.Plugins.Sprite.Acts.SetAnimFrame,
 		C3.Plugins.Sprite.Acts.StopAnim,
@@ -81,12 +80,15 @@ self.C3_GetObjectRefTable = function () {
 		C3.Behaviors.Bullet.Acts.SetAcceleration,
 		C3.Behaviors.Bullet.Acts.SetSpeed,
 		C3.Plugins.System.Acts.SetLayerEffectParam,
+		C3.Plugins.System.Acts.AddVar,
 		C3.Plugins.System.Acts.SubVar,
 		C3.Plugins.Audio.Acts.Stop,
 		C3.Plugins.Audio.Acts.PlayByName,
 		C3.Plugins.Sprite.Cnds.CompareFrame,
 		C3.Plugins.Sprite.Acts.StartAnim,
 		C3.Plugins.Audio.Cnds.OnEnded,
+		C3.Plugins.Audio.Cnds.IsTagPlaying,
+		C3.Plugins.Audio.Acts.SetVolume,
 		C3.Plugins.Text.Acts.SetText
 	];
 };

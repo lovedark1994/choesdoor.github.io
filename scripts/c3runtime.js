@@ -1555,7 +1555,7 @@ self.C3_ExpressionFuncs = [
 		() => "人物",
 		() => "背音",
 		() => "淡",
-		() => "準備好你的喵幣\n每包忍術卡卡包售價為8枚喵幣\n請派一位代表到後方鬼面具忍者購買卡包",
+		() => "準備好你的喵幣\n每包忍術卡卡包售價為8枚喵幣\n請跟你身旁的忍者教官購買卡包",
 		() => 3,
 		p => {
 			const n0 = p._GetNode(0);
@@ -1657,11 +1657,6 @@ self.C3_ExpressionFuncs = [
 			const v1 = p._GetNode(1).GetVar();
 			return () => f0(v1.GetValue(), 11);
 		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const v1 = p._GetNode(1).GetVar();
-			return () => f0(v1.GetValue(), 26);
-		},
 		() => "1",
 		() => "2",
 		p => {
@@ -1732,8 +1727,10 @@ self.C3_ExpressionFuncs = [
 			return () => n0.ExpBehavior("凸");
 		},
 		() => "上一步",
-		() => -10,
+		() => "背景",
 		() => "旁白",
+		() => -20,
+		() => -10,
 		() => "4",
 		() => "6",
 		() => "3",
